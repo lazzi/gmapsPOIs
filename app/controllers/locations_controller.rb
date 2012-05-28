@@ -1,12 +1,13 @@
 class LocationsController < ApplicationController
   before_filter :authenticate_user!
+  before_filter :current_user!, :only => [:show, :edit, :update, :destroy]
 
   # GET /locations
   # GET /locations.json
   def index
     @locations = Location.all
     @json = Location.all.to_gmaps4rails
-
+    
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @locations }
@@ -16,7 +17,7 @@ class LocationsController < ApplicationController
   # GET /locations/1
   # GET /locations/1.json
   def show
-    @location = Location.find(params[:id])
+    
 
     respond_to do |format|
       format.html # show.html.erb
@@ -38,7 +39,7 @@ class LocationsController < ApplicationController
 
   # GET /locations/1/edit
   def edit
-    @location = Location.find(params[:id])
+    
     @json = @location.to_gmaps4rails
   end
 
@@ -46,6 +47,7 @@ class LocationsController < ApplicationController
   # POST /locations.json
   def create
     @location = Location.new(params[:location])
+    @location.user_id = current_user.id
 
     respond_to do |format|
       if @location.save
@@ -61,7 +63,7 @@ class LocationsController < ApplicationController
   # PUT /locations/1
   # PUT /locations/1.json
   def update
-    @location = Location.find(params[:id])
+    
 
     respond_to do |format|
       if @location.update_attributes(params[:location])
@@ -77,7 +79,7 @@ class LocationsController < ApplicationController
   # DELETE /locations/1
   # DELETE /locations/1.json
   def destroy
-    @location = Location.find(params[:id])
+    
     @location.destroy
 
     respond_to do |format|
@@ -85,4 +87,12 @@ class LocationsController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  private 
+      def current_user!
+        @location = Location.find(params[:id])
+        if @location.user_id != current_user.id
+          redirect_to locations_path, :alert => "Can not access this content"
+        end
+      end
 end

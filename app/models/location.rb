@@ -1,4 +1,6 @@
 class Location < ActiveRecord::Base
+  belongs_to :user
+  
   acts_as_gmappable :check_process => false
   
   def gmaps4rails_address
