@@ -5,7 +5,7 @@
     <th>Name</th>
     <th>Longitude</th>
     <th>Latitude</th>
-    <th>Gmaps</th>
+    <th>User</th>
     <th></th>
     <th></th>
     <th></th>
@@ -16,7 +16,7 @@
     <td><%= location.name %></td>
     <td><%= location.longitude %></td>
     <td><%= location.latitude %></td>
-    <td><%= location.gmaps %></td>
+    <td><%= User.find(location.user_id).email || "no user" %></td>
     <% if current_user.id == location.user_id%>
       <td><%= link_to 'Show', location %></td>
       <td><%= link_to 'Edit', edit_location_path(location) %></td>
